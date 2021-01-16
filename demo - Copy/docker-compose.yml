@@ -1,0 +1,35 @@
+version: '3'
+services:
+
+  db:
+    image: 'mysql:latest'
+    container_name: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=Test@123
+      - MYSQL_DATABASE=university
+      - MYSQL_USER=sa
+      - MYSQL_PASSWORD=password
+    ports:
+      - 33061:3306
+
+  web:
+    image: 'last-business:latest'
+    container_name: springboot
+    restart: on-failure
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_USER=sa
+      - DATABASE_PASSWORD=password
+      - DATABASE_NAME=university
+      - DATABASE_PORT=33061
+  ui:
+    image: ui-web:latest
+    ports:
+      - 50528:80
+    depends_on:
+      - web
+

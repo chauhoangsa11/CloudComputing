@@ -1,0 +1,40 @@
+version: '3'
+services:
+  db:
+    image: 'mysql:latest'
+    container_name: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=university
+
+    ports:
+      - 3307:3306
+    networks:
+      - compose-app
+    
+  part-business:
+    image: 'part-business:latest'
+    container_name: part-business
+    restart: on-failure
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_HOST=db
+
+      - DATABASE_NAME=university
+      - DATABASE_PORT=3307  
+    networks:
+      - compose-app
+  ui:
+    image: 'ui-app:latest'
+    container_name: uistudent
+    ports:
+      - 55028:55028
+    links:
+      - part-business
+    networks:
+      - compose-app
+networks:
+  compose-app:

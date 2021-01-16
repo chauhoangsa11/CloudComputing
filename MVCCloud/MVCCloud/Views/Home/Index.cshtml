@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model IEnumerable<Student>
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">TSTT English Center, Fake it untill you Make it</a>.</p>
+    <h1 class="display-4">Student in Ielt Course</h1>
+    <p></p>
+    <br />
+    <div style="float:left">
+        <input type="button" class="btn btn-warning"
+               value="All student"
+               onclick="location.href='@Url.Action("Index", "Home", new { orderBy = 0 })'" />
+        <input type="button" class="btn btn-info"
+               value="Arrange by Total Score"
+               onclick="location.href='@Url.Action("Index","Home", new {orderBy=1 })'" />
+        <input type="button" class="btn btn-outline-dark"
+               value="Arrage by Academic school"
+               onclick="location.href='@Url.Action("Index","Home", new {orderBy=2 })'" />
+    </div>
+    <p>
+        <br />
+        <br />
+        @if (Model?.Count() > 0)
+        {
+            <table class="table table-bordered table-hover table-bordered">
+                <tr class="table-info">
+                    <th>ID Student</th>
+                    <th>Name </th>
+                    <th> Academic</th>
+                    <th>Toiec </th>
+                    <th>Ielt</th>
+                    <th>Edit</th>
+
+
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr class="table-light table-bordered" >
+                        <td>@item.id</td>
+                        <td>@item.name</td>
+                        <td>@item.year</td>
+                        @{
+                            int total = item.listenning + item.writing + item.speaking + item.reading;
+                            <td>@total</td>
+                            string ieltLevel = "0.0";
+                            if (total > 990)
+                                ieltLevel = "9.0";
+                            else if (total >= 901)
+                                ieltLevel = "8.0 - 9.0";
+                            else if (total >= 701)
+                                ieltLevel = "5.5 - 6.5";
+                            else if (total >= 501)
+                                ieltLevel = "4.0 - 5.5";
+                            else if (total >= 255)
+                                ieltLevel = "2.0 - 3.5";
+                            else
+                                ieltLevel = "0 - 1.5";
+                            <td>@ieltLevel</td>
+
+                        }
+
+
+                        <td>
+                            @*<a href="/Home/GetEditStudent/@item.id"
+                            title="EditBook">Edit</a>*@
+                            @Html.ActionLink("Edit", "GetEditStudent", new { id = item.id })
+                            |
+                            @*<a href="/Home/GetEditStudent/@item.id"
+                            title="EditBook">Edit</a>*@
+                            @Html.ActionLink("Detail", "DetailStudent", new { id = item.id })
+                        </td>
+                    </tr>
+   }
+            </table>}
+        <!-- DataTables -->
+        @*<script src="~/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+        <script src="~/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>*@
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- page script -->
+        @*<script>
+            function Delete(id){
+
+
+                $.ajax(
+                {
+                    type: "DELETE",
+                    url: '@Url.Action("DeleteStudent", "Home")',
+                    data: {
+                        id: id
+                    },
+                    error: function (result) {
+                        alert("error");
+                    },
+                    success: function (result) {
+                        if (result == true) {
+                            var baseUrl="/Home/DeleteStudent";
+                            window.location.reload();
+                        }
+                        else {
+                            alert("There is a problem, Try Later!");
+                        }
+                    }
+                });
+            }
+
+        </script>*@
+</div>
